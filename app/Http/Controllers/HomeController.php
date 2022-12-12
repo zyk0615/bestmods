@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Game;
 use App\Models\Mod;
 use App\Models\Seed;
+use App\Models\User;
 use Illuminate\Mail\Markdown;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\URL;
@@ -46,12 +48,9 @@ class HomeController extends Controller
         $page = Request::get('page', 1);
         $numPerPage = env('MODS_PER_PAGE', 50);
 
-        $start = ($page == 1) ? 0 : ($page * $numPerPage);
-        $length = ($page * $numPerPage);
+        $start = ($page == 1) ? 0 : (($page - 1) * $numPerPage) - 1;
 
         $searchVal = Request::get('s', '');
-
-        $searchVal = ($searchVal) ? $searchVal['value'] : '';
 
         // Fake rows.
         $fakeRows = env('FAKE_ROWS', false);
@@ -96,7 +95,7 @@ class HomeController extends Controller
             }
         }
 
-        $mods = $mods->skip(($fakeRows) ? 0 : $start)->take(($fakeRows) ? 1 : $length)->get();
+        $mods = $mods->skip(($fakeRows) ? 0 : $start)->take($numPerPage)->get();
 
         $json = [];
 
@@ -145,19 +144,46 @@ class HomeController extends Controller
             $data['buttons'] = '<div class="flex flex-col text-center"><a href="' . $viewLink . '" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mt-2">View</a> <a href="' . $origLink . '" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 mt-2" target="_blank">Original</a></div>';
 
             // Classes.
-            $data['sclasses'] = $mod->sclasses;
-            $data['gclasses'] = $mod->gclasses;
+            $data['classes'] = 'card-style-default';
 
-            // For testing...
+            if ($mod->sclasses || $mod->gclasses) {
+                $data['classes'] = $mod->sclasses . ' ' . $mod->gclasses;
+            }
+
+
             if ($fakeRows) {
-                for ($i = $start; $i <= $start + $length; $i++) {
-                    $dup = $data;
-                    $dup['id'] = $dup['id'] + $i;
-                    $json[] = $dup;
+                $offset = ($page - 1) * $numPerPage;
+                $newId = (!$offset || $page == 1) ? 1 : ($offset + 1);
+
+                $data['oldname'] = $data['name'];
+                $data['name'] = $data['name'] . ' ' . $newId . ' (orig)';
+                $data['id'] = $newId;
+
+                // Check if we need more.
+                $offset = ($page - 1) * $numPerPage;
+                $newMaxCnt = $offset + $numPerPage;
+
+                // Return nothing if we've hit our max.
+                if ($newMaxCnt > $fakeRowsCnt) {
+                    return json_encode($json);
                 }
             }
 
             $json[] = $data;
+
+            // For testing...
+            if ($fakeRows) {
+                $data['name'] = $data['oldname'];
+
+                for ($i = 1; $i < $numPerPage; $i++) {
+                    $dup = $data;
+
+                    $dup['id'] = $dup['id'] + $i;
+                    $dup['name'] = $dup['name'] . ' ' . $dup['id'];
+
+                    $json[] = $dup;
+                }
+            }
         }
 
         return htmlspecialchars(json_encode($json), ENT_NOQUOTES);
