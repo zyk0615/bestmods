@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::group(['middleware' => ['auth0.authenticate.optional']], function () {
-    Route::get('/', 'HomeController@global');
+    Route::get('/', 'HomeController@index');
     Route::get('retrieve', 'HomeController@retrieve');
     Route::get('/view/{mod}/{view?}', 'HomeController@viewMod');
 });

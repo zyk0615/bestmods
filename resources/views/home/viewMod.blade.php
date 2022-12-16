@@ -1,3 +1,6 @@
+@extends('layouts.default')
+
+@section('content')
 <div class="text-white m-7 container mx-auto px-10">
     @if (!$mod)
     <h1 class="text-3xl font-bold mb-4">Not Found</h1>
@@ -54,3 +57,4 @@
         </div>
     @endif
 </div>
+@endsection

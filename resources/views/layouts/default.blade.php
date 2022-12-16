@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    @include('head')
+    @include('includes.head')
     <body>
-        @include('background')
-        
+        @include('includes.background')
+
         <div class="mx-auto">
-            @include('header')
-            @include($page)
+            @include('includes.header')
+            @yield('content')
         </div>
     </body>
 </html>

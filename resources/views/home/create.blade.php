@@ -16,7 +16,7 @@
             <button data-view-btn data-show-id="seed" class="itemBtn text-white font-bold rounded-t p-3 mr-1 bg-opacity-50 {{ (isset($type) && $type == 'seed') ? 'bg-gray-500' : 'bg-gray-900' }}">Seed</button>
             <button data-view-btn data-show-id="game" class="itemBtn text-white font-bold rounded-t p-3 mr-1 bg-opacity-50 {{ (isset($type) && $type == 'game') ? 'bg-gray-500' : 'bg-gray-900' }}">Game</button>
         @endif
-        
+
         <form method="POST" action="{{ Illuminate\Support\Facades\URL::to('/create', array('type' => 'mod')) }}" class="flex flex-col bg-black bg-opacity-50 shadow-md rounded px-8 pt-6 pb-8 mb-4" enctype='multipart/form-data'>
             @csrf
 
@@ -31,7 +31,7 @@
                 <input class="shadow appearance-none border-blue-900 rounded w-full py-2 px-3 text-gray-200 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" id="image" name="image" type="file" placeholder="Game Image"{{!! isset($image) ? ' value="' . $image . '"' : '' !!}} />
 
                 <input class="inline align-middle border-blue-900 rounded py-2 px-3 text-gray-200 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" id="image-remove" name="image-remove" type="checkbox" value="0" /> <label class="inline align-middle text-gray-200 text-sm font-bold mb-2" for="image-remove">Remove Current</label>
-                
+
             </div>
 
             <div class="mb-4">
@@ -43,7 +43,7 @@
                 <label class="block text-gray-200 text-sm font-bold mb-2" for="name_short">Name Short</label>
                 <input class="shadow appearance-none border-blue-900 rounded w-full py-2 px-3 text-gray-200 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" id="name_short" name="name_short" type="text" placeholder="Short Game Name"{{!! isset($name_short) ? ' value="' . $name_short . '"' : '' !!}} />
             </div>
-            
+
             <div class="mb-4">
                 <label class="block text-gray-200 text-sm font-bold mb-2" for="classes">Classes</label>
                 <input class="shadow appearance-none border-blue-900 rounded w-full py-2 px-3 text-gray-200 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" id="classes" name="classes" type="text" placeholder="CSS Classes"{{!! isset($classes) ? ' value="' . $classes . '"' : '' !!}} />
@@ -187,7 +187,7 @@
                             @php
                                     $itemID = $key + 1;
                             @endphp
-                            
+
                             <div id="screenshot-{{ $itemID }}">
                                 <label class="block text-gray-200 text-sm mt-3 font-bold mb-2" for="screenshot-{{ $itemID }}-url">URL</label>
                                 <input class="shadow appearance-none border-blue-900 rounded w-full py-2 px-3 text-gray-200 bg-gray-800 leading-tight focus:outline-none focus:shadow-outline" id="screenshot-{{ $itemID }}-url" name="screenshot-{{ $itemID }}-url" type="text" placeholder="URL to screenshot." value="{{ $screenshot }}" />

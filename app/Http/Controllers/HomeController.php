@@ -17,31 +17,24 @@ class HomeController extends Controller
 {
     public function __construct()
     {
-
     }
 
-    public function global()
+    public function index()
     {
         $img = '/images/bestmods-filled.png';
         $icon = '/images/bestmods-icon.png';
 
         $base_url = Url::to('/');
 
-        $headinfo = array
-        (
+        $headinfo = array(
             'image' => Url::to($img),
             'icon' => Url::to($icon),
             'url' => $base_url
         );
 
-        return view('global', ['page' => 'index', 'headinfo' => $headinfo, 'base_url' => $base_url]);
+        return view('home.index', ['headinfo' => $headinfo, 'base_url' => $base_url]);
     }
 
-    /**
-     * todo
-     * I'm not sure.But I think it can return blade file?
-     *
-     **/
     public function retrieve()
     {
 
@@ -81,8 +74,7 @@ class HomeController extends Controller
         ])->join('seeds', 'mods.seed', '=', 'seeds.id')->join('games', 'mods.game', '=', 'games.id');
 
         if (strlen($searchVal) > 0) {
-            $cols = array
-            (
+            $cols = array(
                 'mods.name',
                 'games.name_short',
                 'mods.description_short',
@@ -342,8 +334,7 @@ class HomeController extends Controller
 
         $base_url = Url::to('/view', array('mod' => $mod->custom_url));
 
-        $headinfo = array
-        (
+        $headinfo = array(
             'title' => $mod->name . ' - Best Mods',
             'robots' => 'index, nofollow',
             'type' => 'article',
@@ -352,12 +343,13 @@ class HomeController extends Controller
             'description' => $mod->description_short,
             'item1' => $mod->total_views,
             'item2' => $mod->total_downloads,
-            'url' => ($view == 'overview') ? $base_url : Url::to('/view',
-                array('mod' => $mod->custom_url, 'view' => $view))
+            'url' => ($view == 'overview') ? $base_url : Url::to(
+                '/view',
+                array('mod' => $mod->custom_url, 'view' => $view)
+            )
         );
 
-        return view('global', [
-            'page' => 'view',
+        return view('home.viewMod', [
             'mod' => $mod,
             'view' => $view,
             'headinfo' => $headinfo,
@@ -432,8 +424,7 @@ class HomeController extends Controller
                     }
 
                     // We must be set, so add onto downloads array.
-                    $downloads[] = array
-                    (
+                    $downloads[] = array(
                         'name' => Request::get('download-' . $i . '-name', 'Download'),
                         'url' => Request::get('download-' . $i . '-url', null),
                     );
@@ -648,8 +639,7 @@ class HomeController extends Controller
 
         $base_url = Url::to('/create');
 
-        $headinfo = array
-        (
+        $headinfo = array(
             'title' => 'Submit - Best Mods',
             'robots' => 'index, nofollow',
             'type' => 'article',
@@ -659,8 +649,7 @@ class HomeController extends Controller
         $games = Game::all();
         $seeds = Seed::all();
 
-        return view('global', [
-            'page' => 'create',
+        return view('home.create', [
             'headinfo' => $headinfo,
             'base_url' => $base_url,
             'games' => $games,
